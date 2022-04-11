@@ -38,6 +38,30 @@ async function run() {
             res.send(students)
         });
 
+        // Update Student info 
+
+        app.put('/students/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedStudent = req.body;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    fullname: updatedStudent.fullname,
+                    dataOfBirth: updatedStudent.dataOfBirth,
+                    school: updatedStudent.school,
+                    class: updatedStudent.class,
+                    division: updatedStudent.division,
+                    status: updatedStudent.status
+                },
+            };
+            const result = await studentsCollection.updateOne(filter, updatedDoc, options);
+
+            res.json(result);
+
+
+        })
+
         // Delete student
         app.delete('/students/:id', async (req, res) => {
             const id = req.params.id;
